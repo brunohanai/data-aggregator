@@ -19,15 +19,15 @@ class OperationIncrementTest extends \PHPUnit_Framework_TestCase
 
     public function testDoOperation()
     {
-        $this->specify('$current_value não numérico, deve lançar uma exceção', function() {
+        $this->specify('$current_value não numérico, deve lançar uma exceção', function () {
             $this->operation->doOperation('a');
         }, array('throws' => 'LogicException'));
 
-        $this->specify('numérico formatado como texto, não deve lançar uma exceção', function() {
+        $this->specify('numérico formatado como texto, não deve lançar uma exceção', function () {
             verify($this->operation->doOperation('1'))->equals(2);
         });
 
-        $this->specify('deve calcular corretamente', function() {
+        $this->specify('deve calcular corretamente', function () {
             verify($this->operation->doOperation(1))->equals(2);
             verify($this->operation->doOperation(3))->equals(4);
             verify($this->operation->doOperation(-1))->equals(0);
