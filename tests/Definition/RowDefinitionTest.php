@@ -15,11 +15,16 @@ class RowDefinitionTest extends \PHPUnit_Framework_TestCase
             $column = 'Column';
             $label = 'Label';
 
-            $definition = new RowDefinition($column, $label);
+            $definition = new RowDefinition($column, $label, null);
+            $filter = $this->getMockBuilder('BrunoHanai\DataAggregator\Filter\FilterInterface')->getMock();
 
             verify($definition)->isInstanceOf('BrunoHanai\DataAggregator\Definition\RowDefinition');
             verify($definition->getSourceColumn())->equals($column);
             verify($definition->getLabel())->equals($label);
+
+            verify($definition->getFilter())->null();
+            $definition->setFilter($filter);
+            verify($definition->getFilter())->equals($filter);
         });
     }
 }

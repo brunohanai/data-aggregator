@@ -27,8 +27,6 @@ class DefinitionTest extends \PHPUnit_Framework_TestCase
             $columnDefinition2 = clone $columnDefinition1;
             $columnDefinition3 = clone $columnDefinition1;
 
-            $filter = $this->getMockBuilder('BrunoHanai\DataAggregator\Filter\FilterInterface')->getMock();
-
             $definition->addRow($rowDefinition1)->addRow($rowDefinition2);
             $definition->addColumn($columnDefinition1)->addColumn($columnDefinition2)->addColumn($columnDefinition3);
 
@@ -40,10 +38,6 @@ class DefinitionTest extends \PHPUnit_Framework_TestCase
             verify($definition->getColumns()[0])->equals($columnDefinition1);
             verify($definition->getColumns()[1])->equals($columnDefinition2);
             verify($definition->getColumns()[2])->equals($columnDefinition3);
-
-            verify($definition->getFilter())->null();
-            $definition->setFilter($filter);
-            verify($definition->getFilter())->equals($filter);
         });
     }
 }
