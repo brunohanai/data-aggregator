@@ -21,5 +21,8 @@
         "exclude-from-classmap": [
             "/tests/"
         ]
+    },
+    "require": {
+        "symfony/property-access": "^3.1"
     }
 }
