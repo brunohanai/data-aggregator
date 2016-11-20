@@ -16,14 +16,14 @@ class RowDefinitionTest extends \PHPUnit_Framework_TestCase
             $label = 'Label';
 
             $definition = new RowDefinition($column, $label, null);
-            $filter = $this->getMockBuilder('BrunoHanai\DataAggregator\Filter\FilterInterface')->getMock();
+            $filter = $this->getMockBuilder('BrunoHanai\DataAggregator\Definition\RowDefinitionFilter')->getMock();
 
             verify($definition)->isInstanceOf('BrunoHanai\DataAggregator\Definition\RowDefinition');
             verify($definition->getSourceColumn())->equals($column);
             verify($definition->getLabel())->equals($label);
 
             verify($definition->getFilter())->null();
-            $definition->setFilter($filter);
+            $definition->setRowDefinitionFilter($filter);
             verify($definition->getFilter())->equals($filter);
         });
     }

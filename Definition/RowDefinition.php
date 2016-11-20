@@ -2,19 +2,21 @@
 
 namespace BrunoHanai\DataAggregator\Definition;
 
-use BrunoHanai\DataAggregator\Filter\FilterInterface;
-
+/*
+ * TODO: Criar algo como "VirtualRowDefinition" onde $sourceColumn não é necessário pois será definido [virtual]
+ * e o método getSourceColumn deve retornar o getLabel()
+ * A RowDefinition atual serve para os casos normais onde as linhas são definidas através dos valores distintos
+ */
 class RowDefinition
 {
     private $sourceColumn;
     private $label;
     private $filter;
 
-    public function __construct($sourceColumn, $label, FilterInterface $filter = null)
+    public function __construct($sourceColumn, $label)
     {
         $this->sourceColumn = $sourceColumn;
         $this->label = $label;
-        $this->filter = $filter;
     }
 
     public function getSourceColumn()
@@ -27,9 +29,9 @@ class RowDefinition
         return $this->label;
     }
 
-    public function setFilter(FilterInterface $filter)
+    public function setRowDefinitionFilter(RowDefinitionFilter $row_definition_filter)
     {
-        $this->filter = $filter;
+        $this->filter = $row_definition_filter;
 
         return $this;
     }
