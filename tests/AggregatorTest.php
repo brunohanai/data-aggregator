@@ -20,7 +20,7 @@ class AggregatorTest extends \PHPUnit_Framework_TestCase
 {
     use Specify;
 
-    public function test()
+    public function testAggregate()
     {
         $data = array(
             array('grupo' => 'Grupo 1', 'fila' => 'Fila 1', 'atendidas' => 10, 'abandonadas' => 1),
