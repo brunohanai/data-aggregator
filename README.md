@@ -69,6 +69,7 @@ $data = array(
 | -------------- | -------- |
 | Dentro da meta | 3        |
 | Fora da meta   | 2        |
+| Todos          | 5        |
 ```
 
 **Código:**
@@ -86,11 +87,19 @@ $aggregator = new Aggregator(new AggregatorResultFactory(), PropertyAccess::crea
 
 $definition = new Definition();
 
-$filterIn = (new RowDefinitionFilter())->setRowColumnFilterRule('[tma]', new LessThanFilterRule(241));
-$filterOut = (new RowDefinitionFilter())->setRowColumnFilterRule('[tma]', new GreaterThanFilterRule(240));
+$filterIn = (new RowDefinitionFilter(new AffirmativeStrategy()))
+    ->setRowColumnFilter('[tma]', new Filter(new LessThanFilterRule(241)));
+$filterOut = (new RowDefinitionFilter(new AffirmativeStrategy()))
+    ->setRowColumnFilter('[tma]', new Filter(new GreaterThanFilterRule(240)));
+
+$g = (new GroupFilter(new UnanimousStrategy()))
+    ->addFilter(new Filter(new LessThanFilterRule(300)))
+    ->addFilter(new Filter(new GreaterThanFilterRule(200)));
+$filterAll = (new RowDefinitionFilter(new AffirmativeStrategy()))->setRowColumnFilter('[tma]', $g);
 
 $definition->addRow((new RowDefinition('[virtual]', 'Dentro da meta'))->setRowDefinitionFilter($filterIn));
 $definition->addRow((new RowDefinition('[virtual]', 'Fora da meta'))->setRowDefinitionFilter($filterOut));
+$definition->addRow((new RowDefinition('[virtual]', 'Todos'))->setRowDefinitionFilter($filterAll));
 $definition->addColumn(new ColumnDefinition('[contagem]', new OperationIncrement()));
 
 $aggregator->setDefinition($definition);

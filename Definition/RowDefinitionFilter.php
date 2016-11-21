@@ -2,39 +2,35 @@
 
 namespace BrunoHanai\DataAggregator\Definition;
 
-use BrunoHanai\DataAggregator\Filter\Filter;
-use BrunoHanai\DataAggregator\Filter\Rules\AbstractFilterRule;
+use BrunoHanai\DataAggregator\Filter\AbstractFilter;
+use BrunoHanai\DataAggregator\Filter\Evaluator\Strategy\EvaluatorStrategyInterface;
 
 class RowDefinitionFilter
 {
-    private $strategy;
+    private $evaluatorStrategy;
     private $columns;
 
-    public function __construct($strategy = Filter::FILTER_STRATEGY_AFFIRMATIVE)
+    public function __construct(EvaluatorStrategyInterface $evaluator_strategy)
     {
-        $this->setStrategy($strategy);
+        $this->evaluatorStrategy = $evaluator_strategy;
         $this->columns = array();
     }
 
-    public function setStrategy($strategy)
+    public function setEvaluatorStrategy(EvaluatorStrategyInterface $evaluator_strategy)
     {
-        if (!in_array($strategy, Filter::getStrategies())) {
-            throw new \InvalidArgumentException(sprintf('The strategy "%s" is not valid.', $strategy));
-        }
-
-        $this->strategy = $strategy;
+        $this->evaluatorStrategy = $evaluator_strategy;
 
         return $this;
     }
 
-    public function getStrategy()
+    public function getEvaluatorStrategy()
     {
-        return $this->strategy;
+        return $this->evaluatorStrategy;
     }
 
-    public function setRowColumnFilterRule($sourceColumn, AbstractFilterRule $filter_rule)
+    public function setRowColumnFilter($sourceColumn, AbstractFilter $filter)
     {
-        $this->columns[$sourceColumn] = $filter_rule;
+        $this->columns[$sourceColumn] = $filter;
 
         return $this;
     }

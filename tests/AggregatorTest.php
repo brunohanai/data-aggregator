@@ -8,6 +8,8 @@ use BrunoHanai\DataAggregator\Definition\ColumnDefinition;
 use BrunoHanai\DataAggregator\Definition\Definition;
 use BrunoHanai\DataAggregator\Definition\RowDefinition;
 use BrunoHanai\DataAggregator\Definition\RowDefinitionFilter;
+use BrunoHanai\DataAggregator\Filter\Evaluator\Strategy\AffirmativeStrategy;
+use BrunoHanai\DataAggregator\Filter\Filter;
 use BrunoHanai\DataAggregator\Filter\Rules\GreaterThanFilterRule;
 use BrunoHanai\DataAggregator\Filter\Rules\LessThanFilterRule;
 use BrunoHanai\DataAggregator\Operation\OperationIncrement;
@@ -32,11 +34,13 @@ class AggregatorTest extends \PHPUnit_Framework_TestCase
         $this->specify('com linhas virtuais', function () use ($data) {
             $rowDefinition = new RowDefinition('[virtual]', 'Abandonadas (De boas)');
             $rowDefinition->setRowDefinitionFilter(
-                (new RowDefinitionFilter())->setRowColumnFilterRule('[abandonadas]', new LessThanFilterRule(3))
+                (new RowDefinitionFilter(new AffirmativeStrategy()))
+                    ->setRowColumnFilter('[abandonadas]', new Filter(new LessThanFilterRule(3)))
             );
             $rowDefinition2 = new RowDefinition('[virtual]', 'Abandonadas (Crítico)');
             $rowDefinition2->setRowDefinitionFilter(
-                (new RowDefinitionFilter())->setRowColumnFilterRule('[abandonadas]', new GreaterThanFilterRule(2))
+                (new RowDefinitionFilter(new AffirmativeStrategy()))
+                    ->setRowColumnFilter('[abandonadas]', new Filter(new GreaterThanFilterRule(2)))
             );
 
             $columnDefinition = new ColumnDefinition('[abandonadas]', new OperationSum());
