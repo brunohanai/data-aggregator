@@ -16,7 +16,9 @@ class RowDefinitionTest extends \PHPUnit_Framework_TestCase
             $label = 'Label';
 
             $definition = new RowDefinition($column, $label, null);
-            $filter = $this->getMockBuilder('BrunoHanai\DataAggregator\Definition\RowDefinitionFilter')->getMock();
+            $filter = $this->getMockBuilder('BrunoHanai\DataAggregator\Definition\RowDefinitionFilter')
+                ->disableOriginalConstructor()
+                ->getMock();
 
             verify($definition)->isInstanceOf('BrunoHanai\DataAggregator\Definition\RowDefinition');
             verify($definition->getSourceColumn())->equals($column);

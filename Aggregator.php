@@ -6,6 +6,7 @@ use BrunoHanai\DataAggregator\Definition\ColumnDefinition;
 use BrunoHanai\DataAggregator\Definition\Definition;
 use BrunoHanai\DataAggregator\Definition\RowDefinition;
 use BrunoHanai\DataAggregator\Definition\RowDefinitionFilter;
+use BrunoHanai\DataAggregator\Filter\Evaluator\FilterEvaluator;
 use BrunoHanai\DataAggregator\Filter\Filter;
 use Cocur\Slugify\Slugify;
 use Symfony\Component\PropertyAccess\PropertyAccessor;
@@ -69,22 +70,21 @@ class Aggregator
         return $result;
     }
 
-    // TODO: esse método não deveria estar aqui (e talvez não deveria ser assim!)
-    private function checkItem($item, RowDefinitionFilter $filter = null)
+    // TODO: Esse método deveria estar aqui? E ser dessa forma?
+    private function checkItem($item, RowDefinitionFilter $row_definition_filter = null)
     {
-        if ($filter === null) {
+        if ($row_definition_filter === null) {
             return true;
         }
 
-        $result = array(true => 0, false => 0);
+        $evaluator = new FilterEvaluator();
 
-        /** @var $rule \BrunoHanai\DataAggregator\Filter\Rules\AbstractFilterRule */
-        foreach ($filter->getColumns() as $column => $rule) {
+        foreach ($row_definition_filter->getColumns() as $column => $filter) {
             $value = $this->dataAccessor->getValue($item, $column);
 
-            $result[$rule->isValid($value)]++;
+            $evaluator->appendItem($filter, $value);
         }
 
-        return Filter::isValidAccordingToStrategy($result[true], $result[false], $filter->getStrategy());
+        return $evaluator->evaluate($row_definition_filter->getEvaluatorStrategy());
     }
 }
