@@ -1,5 +1,9 @@
-data-aggregator
+data-aggregator     
 ---
+
+[![Open Source Love](https://badges.frapsoft.com/os/v2/open-source.svg?v=103)](https://github.com/ellerbrock/open-source-badge/)
+[![Build Status](https://api.travis-ci.org/brunohanai/data-aggregator.svg?branch=master)](https://travis-ci.org/brunohanai/data-aggregator)
+[![Coverage Status](https://coveralls.io/repos/github/brunohanai/data-aggregator/badge.svg?branch=master)](https://coveralls.io/github/brunohanai/data-aggregator?branch=master)
 
 # Exemplo 1
 

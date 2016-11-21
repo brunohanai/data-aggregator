@@ -5,7 +5,7 @@ namespace BrunoHanai\DataAggregator\Filter;
 use BrunoHanai\DataAggregator\Filter\Evaluator\FilterEvaluator;
 use BrunoHanai\DataAggregator\Filter\Evaluator\Strategy\EvaluatorStrategyInterface;
 
-class GroupFilter extends AbstractFilter
+class FilterGroup extends AbstractFilter
 {
     private $evaluatorStrategy;
 
