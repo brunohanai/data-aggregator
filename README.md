@@ -1,9 +1,8 @@
-data-aggregator     
+data-aggregator [![Open Source Love](https://badges.frapsoft.com/os/v2/open-source.svg?v=103)](https://github.com/ellerbrock/open-source-badge/) [![Build Status](https://api.travis-ci.org/brunohanai/data-aggregator.svg?branch=master)](https://travis-ci.org/brunohanai/data-aggregator) [![Coverage Status](https://coveralls.io/repos/github/brunohanai/data-aggregator/badge.svg?branch=master)](https://coveralls.io/github/brunohanai/data-aggregator?branch=master)     
 ---
 
-[![Open Source Love](https://badges.frapsoft.com/os/v2/open-source.svg?v=103)](https://github.com/ellerbrock/open-source-badge/)
-[![Build Status](https://api.travis-ci.org/brunohanai/data-aggregator.svg?branch=master)](https://travis-ci.org/brunohanai/data-aggregator)
-[![Coverage Status](https://coveralls.io/repos/github/brunohanai/data-aggregator/badge.svg?branch=master)](https://coveralls.io/github/brunohanai/data-aggregator?branch=master)
+O objetivo do `data-aggregator` é agrupar as informações de um array (futuramente objetos também) realizando
+operações como Soma, Contagem e cálculos definidos manualmente.
 
 # Exemplo 1
 
@@ -59,32 +58,32 @@ print_r($result->getArrayResult());
 
 ```
 $data = array(
-    array('grupo' => 'Grupo 1', 'fila' => 'Fila 1', 'atendidas' => 10, 'abandonadas' => 1, 'tma' => 230),
-    array('grupo' => 'Grupo 1', 'fila' => 'Fila 2', 'atendidas' => 20, 'abandonadas' => 2, 'tma' => 235),
-    array('grupo' => 'Grupo 1', 'fila' => 'Fila 3', 'atendidas' => 30, 'abandonadas' => 3, 'tma' => 240),
-    array('grupo' => 'Grupo 2', 'fila' => 'Fila 4', 'atendidas' => 40, 'abandonadas' => 4, 'tma' => 245),
-    array('grupo' => 'Grupo 2', 'fila' => 'Fila 5', 'atendidas' => 50, 'abandonadas' => 5, 'tma' => 250),
+    array('grupo' => 'Grupo 1', 'fila' => 'Fila 1', 'atendidas' => 10, 'abandonadas' => 0, 'tma' => 230),
+    array('grupo' => 'Grupo 1', 'fila' => 'Fila 2', 'atendidas' => 15, 'abandonadas' => 0, 'tma' => 235),
+    array('grupo' => 'Grupo 1', 'fila' => 'Fila 3', 'atendidas' => 5, 'abandonadas' => 0, 'tma' => 240),
+    array('grupo' => 'Grupo 2', 'fila' => 'Fila 4', 'atendidas' => 50, 'abandonadas' => 40, 'tma' => 245),
+    array('grupo' => 'Grupo 2', 'fila' => 'Fila 5', 'atendidas' => 20, 'abandonadas' => 10, 'tma' => 250),
 );
 ```
 **Em isso:**
 
 ```
-| _label         | contagem |
-| -------------- | -------- |
-| Dentro da meta | 3        |
-| Fora da meta   | 2        |
-| Todos          | 5        |
+| _label         | contagem | atendidas | abandonadas | atendidas-porcentagem |
+| -------------- | -------- | --------- | ----------- | --------------------- |
+| Todos          | 5        | 100       | 50          | 66.66                 |
+| Dentro da meta | 3        | 30        | 0           | 100                   |
+| Fora da meta   | 2        | 70        | 50          | 58.33                 |
 ```
 
 **Código:**
 
 ```php
 $data = array(
-    array('grupo' => 'Grupo 1', 'fila' => 'Fila 1', 'atendidas' => 10, 'abandonadas' => 1, 'tma' => 230),
-    array('grupo' => 'Grupo 1', 'fila' => 'Fila 2', 'atendidas' => 20, 'abandonadas' => 2, 'tma' => 235),
-    array('grupo' => 'Grupo 1', 'fila' => 'Fila 3', 'atendidas' => 30, 'abandonadas' => 3, 'tma' => 240),
-    array('grupo' => 'Grupo 2', 'fila' => 'Fila 4', 'atendidas' => 40, 'abandonadas' => 4, 'tma' => 245),
-    array('grupo' => 'Grupo 2', 'fila' => 'Fila 5', 'atendidas' => 50, 'abandonadas' => 5, 'tma' => 250),
+    array('grupo' => 'Grupo 1', 'fila' => 'Fila 1', 'atendidas' => 10, 'abandonadas' => 0, 'tma' => 230),
+    array('grupo' => 'Grupo 1', 'fila' => 'Fila 2', 'atendidas' => 15, 'abandonadas' => 0, 'tma' => 235),
+    array('grupo' => 'Grupo 1', 'fila' => 'Fila 3', 'atendidas' => 5, 'abandonadas' => 0, 'tma' => 240),
+    array('grupo' => 'Grupo 2', 'fila' => 'Fila 4', 'atendidas' => 50, 'abandonadas' => 40, 'tma' => 245),
+    array('grupo' => 'Grupo 2', 'fila' => 'Fila 5', 'atendidas' => 20, 'abandonadas' => 10, 'tma' => 250),
 );
 
 $aggregator = new Aggregator(new AggregatorResultFactory(), PropertyAccess::createPropertyAccessor());
@@ -96,15 +95,18 @@ $filterIn = (new RowDefinitionFilter(new AffirmativeStrategy()))
 $filterOut = (new RowDefinitionFilter(new AffirmativeStrategy()))
     ->setRowColumnFilter('[tma]', new Filter(new GreaterThanFilterRule(240)));
 
-$g = (new GroupFilter(new UnanimousStrategy()))
+$g = (new FilterGroup(new UnanimousStrategy()))
     ->addFilter(new Filter(new LessThanFilterRule(300)))
     ->addFilter(new Filter(new GreaterThanFilterRule(200)));
 $filterAll = (new RowDefinitionFilter(new AffirmativeStrategy()))->setRowColumnFilter('[tma]', $g);
 
-$definition->addRow((new RowDefinition('[virtual]', 'Dentro da meta'))->setRowDefinitionFilter($filterIn));
-$definition->addRow((new RowDefinition('[virtual]', 'Fora da meta'))->setRowDefinitionFilter($filterOut));
 $definition->addRow((new RowDefinition('[virtual]', 'Todos'))->setRowDefinitionFilter($filterAll));
+$definition->addRow((new RowDefinition('[virtual]', 'TMA Dentro da meta'))->setRowDefinitionFilter($filterIn));
+$definition->addRow((new RowDefinition('[virtual]', 'TMA Fora da meta'))->setRowDefinitionFilter($filterOut));
 $definition->addColumn(new ColumnDefinition('[contagem]', new OperationIncrement()));
+$definition->addColumn(new ColumnDefinition('[atendidas]', new OperationSum()));
+$definition->addColumn(new ColumnDefinition('[abandonadas]', new OperationSum()));
+$definition->addColumn(new ColumnDefinition('[atendidas_porcentagem]', new OperationManualCalc('[atendidas] / ([atendidas] + [abandonadas]) * 100')));
 
 $aggregator->setDefinition($definition);
 
