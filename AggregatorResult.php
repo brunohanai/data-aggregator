@@ -23,8 +23,10 @@ class AggregatorResult
         $currentValue = $this->getItemValue($rowId, $columnName);
         $currentValue = $currentValue === null ? 0 : $currentValue;
 
+        $context = (array)$this->getItem($rowId);
+
         $this->items[$rowId]['_label'] = $row_label;
-        $this->items[$rowId][$columnName] = $operation->doOperation($currentValue, $new_value);
+        $this->items[$rowId][$columnName] = $operation->doOperation($currentValue, $new_value, $context);
     }
 
     public function getItem($id)
