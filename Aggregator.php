@@ -7,8 +7,6 @@ use BrunoHanai\DataAggregator\Definition\Definition;
 use BrunoHanai\DataAggregator\Definition\RowDefinition;
 use BrunoHanai\DataAggregator\Definition\RowDefinitionFilter;
 use BrunoHanai\DataAggregator\Filter\Evaluator\FilterEvaluator;
-use BrunoHanai\DataAggregator\Filter\Filter;
-use Cocur\Slugify\Slugify;
 use Symfony\Component\PropertyAccess\PropertyAccessor;
 
 class Aggregator
