@@ -14,6 +14,7 @@ class AggregatorResult
     public function __construct(Slugify $slugify)
     {
         $this->slugify = $slugify;
+        $this->items = array();
         $this->memoryColumns = array();
     }
 
