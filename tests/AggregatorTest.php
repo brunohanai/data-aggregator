@@ -156,7 +156,7 @@ class AggregatorTest extends \PHPUnit_Framework_TestCase
             ;
 
             $slugify = $this->getMockBuilder('Cocur\Slugify\Slugify')->getMock();
-            $slugify->expects($this->exactly(4))->method('slugify')->willReturn(1,2,3,4,5);
+            $slugify->expects($this->exactly(4))->method('slugify')->willReturn(1, 2, 3, 4, 5);
 
             $aggregatorResult = new AggregatorResult($slugify);
 
