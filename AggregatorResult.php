@@ -9,10 +9,12 @@ class AggregatorResult
 {
     private $slugify;
     private $items;
+    private $memoryColumns;
 
     public function __construct(Slugify $slugify)
     {
         $this->slugify = $slugify;
+        $this->memoryColumns = array();
     }
 
     public function appendValue($row_label, OperationInterface $operation, $new_value, $column_name)
@@ -49,8 +51,22 @@ class AggregatorResult
         return base64_encode($row_id);
     }
 
+    /**
+     * Saved in memory to avoid unnecessary slugify() calls
+     *
+     * @param $column_name
+     * @return mixed|string
+     */
     private function adjustColumnName($column_name)
     {
-        return $this->slugify->slugify($column_name);
+        if (isset($this->memoryColumns[$column_name])) {
+            return $this->memoryColumns[$column_name];
+        }
+
+        $columnName = $this->slugify->slugify($column_name);
+
+        $this->memoryColumns[$column_name] = $columnName;
+
+        return $columnName;
     }
 }

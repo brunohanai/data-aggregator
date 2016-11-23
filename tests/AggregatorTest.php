@@ -3,6 +3,7 @@
 namespace BrunoHanai\DataAggregator\Tests;
 
 use BrunoHanai\DataAggregator\Aggregator;
+use BrunoHanai\DataAggregator\AggregatorResult;
 use BrunoHanai\DataAggregator\AggregatorResultFactory;
 use BrunoHanai\DataAggregator\Definition\ColumnDefinition;
 use BrunoHanai\DataAggregator\Definition\Definition;
@@ -43,7 +44,7 @@ class AggregatorTest extends \PHPUnit_Framework_TestCase
                     ->setRowColumnFilter('[abandonadas]', new Filter(new GreaterThanFilterRule(2)))
             );
 
-            $columnDefinition = new ColumnDefinition('[abandonadas]', new OperationSum());
+            $columnDefinition = new ColumnDefinition('[abandonadas]', new OperationSum(), 'Chamadas Abandonadas!!!');
             $columnDefinition2 = new ColumnDefinition('[atendidas]', new OperationSum());
             $columnDefinition3 = new ColumnDefinition('[grupo]', new OperationText());
 
@@ -58,8 +59,8 @@ class AggregatorTest extends \PHPUnit_Framework_TestCase
 
             $results = $aggregator->aggregate($data)->getArrayResult();
 
-            verify($results[0]['abandonadas'])->equals(3);
-            verify($results[1]['abandonadas'])->equals(7);
+            verify($results[0]['chamadas_abandonadas'])->equals(3);
+            verify($results[1]['chamadas_abandonadas'])->equals(7);
         });
 
         $this->specify('normal, agrupando por grupo', function () {
@@ -129,6 +130,44 @@ class AggregatorTest extends \PHPUnit_Framework_TestCase
             verify($results[1]['atendidas'])->equals(11);
             verify($results[1]['abandonadas'])->equals(2);
             verify($results[1]['contagem'])->equals(1);
+        });
+
+        $this->specify('garantir que o slugify não seja chamado mais do que o necessário', function () {
+            $data = array(
+                array('grupo' => 'Grupo 1', 'fila' => 'Fila 1', 'atendidas' => 10, 'abandonadas' => 1),
+                array('grupo' => 'Grupo 1', 'fila' => 'Fila 2', 'atendidas' => 11, 'abandonadas' => 2),
+                array('grupo' => 'Grupo 1', 'fila' => 'Fila 3', 'atendidas' => 12, 'abandonadas' => 3),
+                array('grupo' => 'Grupo 2', 'fila' => 'Fila 4', 'atendidas' => 13, 'abandonadas' => 4),
+            );
+
+            $rowDefinition = new RowDefinition('[fila]', 'Fila');
+            $columnDefinition1 = new ColumnDefinition('[grupo]', new OperationText(), 'Grupo');
+            $columnDefinition2 = new ColumnDefinition('[atendidas]', new OperationSum(), 'Atendidas');
+            $columnDefinition3 = new ColumnDefinition('[abandonadas]', new OperationSum(), 'Abandonadas');
+            $columnDefinition4 = new ColumnDefinition('[contagem]', new OperationIncrement(), 'Contagem');
+
+            $definition = new Definition();
+            $definition->addRow($rowDefinition);
+            $definition
+                ->addColumn($columnDefinition1)
+                ->addColumn($columnDefinition2)
+                ->addColumn($columnDefinition3)
+                ->addColumn($columnDefinition4)
+            ;
+
+            $slugify = $this->getMockBuilder('Cocur\Slugify\Slugify')->getMock();
+            $slugify->expects($this->exactly(4))->method('slugify')->willReturn(1,2,3,4,5);
+
+            $aggregatorResult = new AggregatorResult($slugify);
+
+            $aggregatorResultFactory = $this->getMockBuilder('BrunoHanai\DataAggregator\AggregatorResultFactory')
+                ->getMock();
+            $aggregatorResultFactory->expects($this->once())->method('create')->willReturn($aggregatorResult);
+
+            $propertyAccessor = PropertyAccess::createPropertyAccessor();
+            $aggregator = new Aggregator($aggregatorResultFactory, $propertyAccessor, $definition);
+
+            $aggregator->aggregate($data)->getArrayResult();
         });
     }
 }
