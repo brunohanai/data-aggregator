@@ -21,10 +21,10 @@ $data = array(
 **Em isso:**
 
 ```
-| _label  | atendidas | abandonadas |
-| ------- | --------- | ----------- |
-| Grupo 1 | 60        | 6           |
-| Grupo 2 | 90        | 9           |
+$data = array(
+    array('_label' => 'Grupo 1', 'atendidas' => 60, 'abandonadas' => 6),
+    array('_label' => 'Grupo 2', 'atendidas' => 90, 'abandonadas' => 9),
+);
 ```
 
 **Código:**
@@ -38,13 +38,12 @@ $data = array(
     array('grupo' => 'Grupo 2', 'fila' => 'Fila 5', 'atendidas' => 50, 'abandonadas' => 5, 'tma' => 250),
 );
 
-$aggregator = new Aggregator(new AggregatorResultFactory(), PropertyAccess::createPropertyAccessor());
-
 $definition = new Definition();
 $definition->addRow(new RowDefinition('[grupo]', 'Grupo'));
 $definition->addColumn(new ColumnDefinition('[atendidas]', new OperationSum()));
 $definition->addColumn(new ColumnDefinition('[abandonadas]', new OperationSum()));
 
+$aggregator = DataAggregator::createAggregator();
 $aggregator->setDefinition($definition);
 
 $result = $aggregator->aggregate($data);
@@ -68,11 +67,11 @@ $data = array(
 **Em isso:**
 
 ```
-| _label         | contagem | atendidas | abandonadas | atendidas-porcentagem |
-| -------------- | -------- | --------- | ----------- | --------------------- |
-| Todos          | 5        | 100       | 50          | 66.66                 |
-| Dentro da meta | 3        | 30        | 0           | 100                   |
-| Fora da meta   | 2        | 70        | 50          | 58.33                 |
+$data = array(
+    array('_label' => 'Todos',          'contagem' => 5, 'atendidas' => 100, 'abandonadas' => 50, 'atendidas-porcentagem' => 66.66),
+    array('_label' => 'Dentro da meta', 'contagem' => 3, 'atendidas' => 30,  'abandonadas' => 0,  'atendidas-porcentagem' => 100),
+    array('_label' => 'Fora da meta',   'contagem' => 2, 'atendidas' => 70,  'abandonadas' => 50, 'atendidas-porcentagem' => 58.33),
+);
 ```
 
 **Código:**
@@ -85,8 +84,6 @@ $data = array(
     array('grupo' => 'Grupo 2', 'fila' => 'Fila 4', 'atendidas' => 50, 'abandonadas' => 40, 'tma' => 245),
     array('grupo' => 'Grupo 2', 'fila' => 'Fila 5', 'atendidas' => 20, 'abandonadas' => 10, 'tma' => 250),
 );
-
-$aggregator = new Aggregator(new AggregatorResultFactory(), PropertyAccess::createPropertyAccessor());
 
 $definition = new Definition();
 
@@ -108,6 +105,7 @@ $definition->addColumn(new ColumnDefinition('[atendidas]', new OperationSum()));
 $definition->addColumn(new ColumnDefinition('[abandonadas]', new OperationSum()));
 $definition->addColumn(new ColumnDefinition('[atendidas_porcentagem]', new OperationManualCalc('[atendidas] / ([atendidas] + [abandonadas]) * 100')));
 
+$aggregator = DataAggregator::createAggregator();
 $aggregator->setDefinition($definition);
 
 $result = $aggregator->aggregate($data);
