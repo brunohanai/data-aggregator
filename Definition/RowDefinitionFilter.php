@@ -2,8 +2,8 @@
 
 namespace BrunoHanai\DataAggregator\Definition;
 
-use BrunoHanai\DataAggregator\Filter\AbstractFilter;
 use BrunoHanai\DataAggregator\Filter\Evaluator\Strategy\EvaluatorStrategyInterface;
+use BrunoHanai\DataAggregator\Filter\FilterInterface;
 
 class RowDefinitionFilter
 {
@@ -28,7 +28,7 @@ class RowDefinitionFilter
         return $this->evaluatorStrategy;
     }
 
-    public function setRowColumnFilter($sourceColumn, AbstractFilter $filter)
+    public function setRowColumnFilter($sourceColumn, FilterInterface $filter)
     {
         $this->columns[$sourceColumn] = $filter;
 

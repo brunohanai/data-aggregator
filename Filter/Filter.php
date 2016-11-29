@@ -4,7 +4,7 @@ namespace BrunoHanai\DataAggregator\Filter;
 
 use BrunoHanai\DataAggregator\Filter\Rules\AbstractFilterRule;
 
-class Filter extends AbstractFilter
+class Filter implements FilterInterface
 {
     private $rule;
 

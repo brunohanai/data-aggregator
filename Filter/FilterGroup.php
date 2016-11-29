@@ -5,7 +5,7 @@ namespace BrunoHanai\DataAggregator\Filter;
 use BrunoHanai\DataAggregator\Filter\Evaluator\FilterEvaluator;
 use BrunoHanai\DataAggregator\Filter\Evaluator\Strategy\EvaluatorStrategyInterface;
 
-class FilterGroup extends AbstractFilter
+class FilterGroup implements FilterInterface
 {
     private $evaluatorStrategy;
 
@@ -23,7 +23,7 @@ class FilterGroup extends AbstractFilter
         $this->evaluatorStrategy = $evaluator_strategy;
     }
 
-    public function addFilter(AbstractFilter $filter)
+    public function addFilter(FilterInterface $filter)
     {
         $this->filters[] = $filter;
 

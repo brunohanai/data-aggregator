@@ -2,8 +2,8 @@
 
 namespace BrunoHanai\DataAggregator\Filter\Evaluator;
 
-use BrunoHanai\DataAggregator\Filter\AbstractFilter;
 use BrunoHanai\DataAggregator\Filter\Evaluator\Strategy\EvaluatorStrategyInterface;
+use BrunoHanai\DataAggregator\Filter\FilterInterface;
 
 class FilterEvaluator
 {
@@ -16,7 +16,7 @@ class FilterEvaluator
         $this->invalid = 0;
     }
 
-    public function appendItem(AbstractFilter $filter, $value)
+    public function appendItem(FilterInterface $filter, $value)
     {
         if ($filter->isValid($value) === true) {
             $this->valid++;
