@@ -2,8 +2,7 @@
 
 namespace BrunoHanai\DataAggregator\Tests;
 
-use BrunoHanai\DataAggregator\Aggregator;
-use BrunoHanai\DataAggregator\AggregatorResultFactory;
+use BrunoHanai\DataAggregator\DataAggregator;
 use BrunoHanai\DataAggregator\Definition\ColumnDefinition;
 use BrunoHanai\DataAggregator\Definition\Definition;
 use BrunoHanai\DataAggregator\Definition\RowDefinition;
@@ -16,7 +15,6 @@ use BrunoHanai\DataAggregator\Operation\OperationIncrement;
 use BrunoHanai\DataAggregator\Operation\OperationSum;
 use BrunoHanai\DataAggregator\Operation\OperationText;
 use Codeception\Specify;
-use Symfony\Component\PropertyAccess\PropertyAccess;
 
 class AggregatorTest extends \PHPUnit_Framework_TestCase
 {
@@ -53,8 +51,8 @@ class AggregatorTest extends \PHPUnit_Framework_TestCase
                 ->addColumn($columnDefinition2)
                 ->addColumn($columnDefinition);
 
-            $propertyAccessor = PropertyAccess::createPropertyAccessor();
-            $aggregator = new Aggregator(new AggregatorResultFactory(), $propertyAccessor, $definition);
+            $aggregator = DataAggregator::createAggregator();
+            $aggregator->setDefinition($definition);
 
             $results = $aggregator->aggregate($data)->getArrayResult();
 
@@ -79,8 +77,8 @@ class AggregatorTest extends \PHPUnit_Framework_TestCase
             $definition->addRow($rowDefinition);
             $definition->addColumn($columnDefinition1)->addColumn($columnDefinition2)->addColumn($columnDefinition3);
 
-            $propertyAccessor = PropertyAccess::createPropertyAccessor();
-            $aggregator = new Aggregator(new AggregatorResultFactory(), $propertyAccessor, $definition);
+            $aggregator = DataAggregator::createAggregator();
+            $aggregator->setDefinition($definition);
 
             $results = $aggregator->aggregate($data)->getArrayResult();
 
@@ -115,8 +113,8 @@ class AggregatorTest extends \PHPUnit_Framework_TestCase
                 ->addColumn($columnDefinition3)
                 ->addColumn($columnDefinition4);
 
-            $propertyAccessor = PropertyAccess::createPropertyAccessor();
-            $aggregator = new Aggregator(new AggregatorResultFactory(), $propertyAccessor, $definition);
+            $aggregator = DataAggregator::createAggregator();
+            $aggregator->setDefinition($definition);
 
             $results = $aggregator->aggregate($data)->getArrayResult();
 
