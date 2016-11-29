@@ -17,11 +17,11 @@ class Aggregator
 
     public function __construct(
         AggregatorResultFactory $result_factory,
-        PropertyAccessor $property_acessor,
+        PropertyAccessor $property_accessor,
         Definition $definition = null
     ) {
         $this->resultFactory = $result_factory;
-        $this->dataAccessor = $property_acessor;
+        $this->dataAccessor = $property_accessor;
         $this->definition = $definition;
     }
 
