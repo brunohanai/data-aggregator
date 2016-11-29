@@ -2,6 +2,8 @@
 
 namespace BrunoHanai\DataAggregator\Tests;
 
+use BrunoHanai\DataAggregator\Aggregator;
+use BrunoHanai\DataAggregator\AggregatorResult;
 use BrunoHanai\DataAggregator\DataAggregator;
 use BrunoHanai\DataAggregator\Definition\ColumnDefinition;
 use BrunoHanai\DataAggregator\Definition\Definition;
@@ -15,6 +17,7 @@ use BrunoHanai\DataAggregator\Operation\OperationIncrement;
 use BrunoHanai\DataAggregator\Operation\OperationSum;
 use BrunoHanai\DataAggregator\Operation\OperationText;
 use Codeception\Specify;
+use Symfony\Component\PropertyAccess\PropertyAccess;
 
 class AggregatorTest extends \PHPUnit_Framework_TestCase
 {
@@ -160,7 +163,7 @@ class AggregatorTest extends \PHPUnit_Framework_TestCase
             $aggregatorResultFactory = $this->getMockBuilder('BrunoHanai\DataAggregator\AggregatorResultFactory')
                 ->getMock();
             $aggregatorResultFactory->expects($this->once())->method('create')->willReturn($aggregatorResult);
-
+            
             $propertyAccessor = PropertyAccess::createPropertyAccessor();
             $aggregator = new Aggregator($aggregatorResultFactory, $propertyAccessor, $definition);
 
