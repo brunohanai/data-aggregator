@@ -25,5 +25,6 @@
     "require": {
         "symfony/property-access": "^3.1",
         "cocur/slugify": "^2.3"
-    }
+    },
+     "minimum-stability": "dev"
 }

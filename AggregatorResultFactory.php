@@ -8,6 +8,6 @@ class AggregatorResultFactory
 {
     public function create()
     {
-        return new AggregatorResult(new Slugify());
+        return new AggregatorResult(new Slugify(array('separator' => '_')));
     }
 }

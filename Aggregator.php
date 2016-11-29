@@ -32,7 +32,7 @@ class Aggregator
         return $this;
     }
 
-    public function aggregate(array $data) // TODO: Por enquanto só aceita array()
+    public function aggregate($data) // TODO: Por enquanto só aceita array()
     {
         if ($this->definition === null) {
             throw new \LogicException('The "Definition" must be set.');
