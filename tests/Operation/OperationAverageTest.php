@@ -12,9 +12,13 @@ class OperationAverageTest extends \PHPUnit_Framework_TestCase
     /** @var $operation OperationAverage */
     private $operation;
 
+    /** @var $operationFirstZeroAsFirst OperationAverage */
+    private $operationFirstZeroAsFirst;
+
     public function setUp()
     {
         $this->operation = new OperationAverage();
+        $this->operationFirstZeroAsFirst = new OperationAverage(true);
     }
 
     public function testDoOperation()
@@ -34,15 +38,25 @@ class OperationAverageTest extends \PHPUnit_Framework_TestCase
         });
 
         $this->specify('deve calcular corretamente', function () {
-            verify($this->operation->doOperation(null, 1))->equals(1);
+            verify($this->operation->doOperation(null, 1))->equals(0.5);
+            verify($this->operationFirstZeroAsFirst->doOperation(null, 1))->equals(1);
+
             verify($this->operation->doOperation(0, 1))->equals(0.5);
+            verify($this->operationFirstZeroAsFirst->doOperation(0, 1))->equals(1);
+
             verify($this->operation->doOperation(1, 1))->equals(1);
+            verify($this->operationFirstZeroAsFirst->doOperation(1, 1))->equals(1);
+
+            verify($this->operation->doOperation(1, null))->equals(1);
+            verify($this->operationFirstZeroAsFirst->doOperation(1, null))->equals(1);
+
+            verify($this->operation->doOperation(null, null))->null();
+            verify($this->operationFirstZeroAsFirst->doOperation(null, null))->null();
+
             verify($this->operation->doOperation(3, 7))->equals(5);
             verify($this->operation->doOperation(7, 3))->equals(5);
             verify($this->operation->doOperation(10, -5))->equals(2.5);
             verify($this->operation->doOperation(-5, -5))->equals(-5);
-            verify($this->operation->doOperation(1, null))->equals(1);
-            verify($this->operation->doOperation(null, null))->null();
         });
     }
 }
