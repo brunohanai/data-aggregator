@@ -18,7 +18,10 @@ class OperationManualCalc implements OperationInterface
 
     public function doOperation($current_value = null, $new_value = null, array $context = array())
     {
-        preg_match_all('/\[([a-z0-9A-Z]{1,})\]/', $this->calc, $placeholders);
+        $context['_current'] = $current_value;
+        $context['_new'] = $new_value;
+
+        preg_match_all('/\[([a-z0-9A-Z_]{1,})\]/', $this->calc, $placeholders);
 
         $calc = $this->calc;
 
